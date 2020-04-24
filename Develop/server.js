@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 8080;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
-// creats empty array to store notes
+// creates empty array to store notes
 let notes = [];
 
 // ========================================================================
@@ -27,16 +27,49 @@ app.get("/api/notes", (req, res) => {
 })
 // pushes the new written note into the notes array when the save button is pressed
 app.post("/api/notes", (req, res) => {
-    notes.push(req.body)
-    fs.writeFile('./db/db.json', JSON.stringify(notes), 'utf8', err => {
-        if (err) {
-            throw err;
+    try {
+        // giving Notes an ID
+        req.body.id = notes.length;
+        console.log(notes);
+        if (!Array.isArray(notes)) {
+            notes = JSON.parse(notes);
         }
-    });
-    res.json(notes);
-})
-// deletes the stored note when the delete button is pressed
 
+        notes.push(req.body)
+        fs.writeFile('./db/db.json', JSON.stringify(notes), 'utf8', err => {
+            if (err) {
+                throw err;
+            }
+        });
+
+        res.json(notes);
+
+    } catch (err) {
+        console.log("")
+    }
+});
+
+// deletes the stored note when the delete button is pressed
+app.delete("/api/notes/:id", function (req, res) {
+    try {
+        notes = fs.readFileSync("./db/db.json", "utf8");
+        notes = JSON.parse(notes);
+        // Deletes Old Notes from Array
+        notes = notes.filter(note => {
+            return note.id != req.params.id;
+        });
+        notes = JSON.stringify(notes);
+        // Write New Note to File
+        fs.writeFile("./db/db.json", notes, "utf8", err => {
+            if (err)
+                throw err;
+        });
+        res.json(JSON.parse(notes));
+        // Error Handling
+    } catch (err) {
+        throw err;
+    }
+});
 //  ========================================================================
 
 // HTML Routes
