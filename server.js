@@ -31,9 +31,13 @@ app.post("/api/notes", (req, res) => {
         // giving Notes an ID
         req.body.id = notes.length;
         console.log(notes);
+        
         if (!Array.isArray(notes)) {
             notes = JSON.parse(notes);
         }
+
+
+
 
         notes.push(req.body)
         fs.writeFile('./db/db.json', JSON.stringify(notes), 'utf8', err => {
