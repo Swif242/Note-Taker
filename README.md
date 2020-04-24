@@ -37,7 +37,7 @@ Jeremy Nelson
 None
 
 ## Deployed
-https://intense-caverns-64198.herokuapp.com/notes
+https://intense-caverns-64198.herokuapp.com
 
 # Readme created using my ReadMe-Generator node.js CLI app
 
